@@ -17,7 +17,8 @@ const UserSchema = new Schema({
         required: true
      },
      image: { 
-        type: Object
+        type: Object,
+        required: true
      },
      phone : {
         type: String
@@ -40,7 +41,8 @@ const UserSchema = new Schema({
       },
       role: {
         type : String,
-        default : ['User', 'Admin']
+        default: 'User',
+        enum : ['User', 'Admin']
       }
 },
 { 

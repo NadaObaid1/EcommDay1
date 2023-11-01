@@ -1,6 +1,6 @@
 import mongoose, {Schema, Types, model} from "mongoose";
 
-const UserSchema = new Schema({
+const CategorySchema = new Schema({
     Name:{
         type: String,
         required: true,
@@ -25,5 +25,5 @@ const UserSchema = new Schema({
     { 
         timestamps : true
     })
-const CategoryModel = mongoose.model.Category || model('Category', UserSchema)
+const CategoryModel = mongoose.model.Category || model('Category', CategorySchema)
 export default CategoryModel

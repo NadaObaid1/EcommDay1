@@ -1,5 +1,6 @@
 import productRouter from "./modules/Products/Product.router.js"
 import  CatogoriresRouter from "./modules/Catogories/catogories.router.js"
+import  AuthRouter from "./modules/Auth/Auth.router.js"
 import connectDb from "./DB/Connection.js"
 
 const initApp =(app, express)=>{
@@ -11,6 +12,7 @@ const initApp =(app, express)=>{
 
     app.use("/product", productRouter)
     app.use("/Catogories", CatogoriresRouter)
+    app.use("/auth", AuthRouter)
 
     app.get("*", (req, res) =>{
         return res.status(500).json({message:"page not found"})
