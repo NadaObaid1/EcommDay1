@@ -1,10 +1,10 @@
 import slugify from 'slugify'
-import CategoryModel from "../../DB/Model/Category.model.js"
+import CategoryModel from "../../../DB/Model/Category.model.js"
 import cloudinary from "../../Services/Cloudinary.js"
 
 export const getCatogorires = async(req, res)=>{
     //const Categories = await CategoryModel.find().select('Name')//لو درجع بس الاسم مثلا واكيد رح يرجع ال id
-    const Categories = await CategoryModel.find()
+    const Categories = await CategoryModel.find().populate('SubCategory')
     return res.status(200).json({message: "success", Categories})
 }
 
@@ -39,6 +39,8 @@ try{
             await cloudinary.uploader.destroy(Category.image.public_id)
             Category.image = {secure_url, public_id}
     }
+    Category.UpdatedBy = req.user._id
+    Category.createdBy = req.user._id
     await Category.save() //انشأت اوبجكت وعملتله سيف على الداتا بيس هاي احد الطرق للحفظ بالداتا البيس
     return res.status(200).json({message: "success", Category})
 }catch(error){
@@ -69,7 +71,8 @@ export const CreateCategory = async (req, res)=>{
             folder : `${process.env.APP_NAME}/Categories`
         })
     
-        const Cat = await CategoryModel.create({Name, slug: SlugName, image: {secure_url, public_id}})
+        const Cat = await CategoryModel.create({Name, slug: SlugName, image: {secure_url, public_id}, createdBy: req.user._id,
+            UpdatedBy: req.user._id})
         return res.status(201).json({message: "success", Cat})
         //return res.json(SlugName)
     }catch (error) {
