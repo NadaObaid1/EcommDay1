@@ -40,7 +40,6 @@ try{
             Category.image = {secure_url, public_id}
     }
     Category.UpdatedBy = req.user._id
-    Category.createdBy = req.user._id
     await Category.save() //انشأت اوبجكت وعملتله سيف على الداتا بيس هاي احد الطرق للحفظ بالداتا البيس
     return res.status(200).json({message: "success", Category})
 }catch(error){

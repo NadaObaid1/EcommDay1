@@ -3,6 +3,7 @@ import CatogoriresRouter from  "./Catogories/catogories.router.js"
 import AuthRouter from "./Auth/Auth.router.js"
 import SubCatogoriresRouter from "./SubCatogories/SubCatogories.router.js"
 import CouponRouter from './Coupon/Coupon.router.js'
+import CartRouter from "./Cart/Cart.router.js"
 import connectDb from "../../DB/Connection.js"
 import { sendEmail } from "../Services/Email.js"
 
@@ -18,6 +19,7 @@ const initApp = async(app, express)=>{
     app.use("/SubCatogories", SubCatogoriresRouter)
     app.use("/auth", AuthRouter)
     app.use('/coupon', CouponRouter)
+    app.use("/cart", CartRouter)
 
     app.get("*", (req, res) =>{
         return res.status(500).json({message:"page not found"})

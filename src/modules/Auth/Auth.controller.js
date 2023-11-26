@@ -3,6 +3,8 @@ import UserModel from "../../../DB/Model/User.model.js"
 import jwt from "jsonwebtoken"
 import cloudinary from "../../Services/Cloudinary.js"
 import { sendEmail } from "../../Services/Email.js"
+import { customAlphabet } from 'nanoid'
+import { nanoid } from 'nanoid'
 
 export const SignUp = async(req, res)=>{
     try{
@@ -55,4 +57,34 @@ export const ConfirmEmail = async(req, res)=>{
         return res.status(400).json({message:"invalid verify your email or your email is verified"})
     }
         return res.status(200).json({message:"your email is verified"});
+}
+
+export const SendCode = async(req, res)=>{ 
+    const {email} = req.body
+    let code = customAlphabet('1234567890', 4)
+    code = code()
+    const user = await UserModel.findOneAndUpdate({email}, {sendCode: code}, {new:true}); //من خلال  الايميل غيرلي الكود من نل للقيمة الجديدة وعدل البيانات
+    const html = `<h2>code is : ${code} </h2>`
+    await sendEmail(email, `Resetpassword`, html);
+    //return res.redirect(process.env.REDICTPAGE)
+    return res.status(200).json({message:"success", user});
+}
+
+export const forgetPassword = async(req, res)=>{
+    const {email, password, code} = req.body;
+    const user = await UserModel.findOne({email});
+    if(!user){
+        return res.status(404).json({message:"not register account"});
+    }
+    if(user.sendCode != code) {
+        return res.status(400).json({message:"invalid code"});
+    }
+    let match = await bcrypt.compare(password, user.password);
+    if(match){
+        return res.status(409).json({message:"same password"});
+    }
+    user.password = await bcrypt.hash(password, parseInt(process.env.SALT_ROUND));
+    user.sendCode=null;
+    await user. save();
+    return res.status(200).json({message: "success"});       
 }
